@@ -1,3 +1,6 @@
+docker:
+	docker build -t my-service:latest .
+
 build:
 	go build -o my-service cmd/main.go
 
