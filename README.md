@@ -4,9 +4,10 @@ This is My Template/Boilerplate to Create REST API/Microservice Using:
 
  - Go
  - Echo Framework (v4)
- - Mysql
+ - MySQL
  - Viper
  - Paseto Token
+ - Migrate ([golang-migrate](https://github.com/golang-migrate/migrate))
 
 # How to Run ?
 
