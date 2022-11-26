@@ -28,6 +28,6 @@ func (r *humanRoutes) Install(server *echo.Echo, authMw middleware.AuthMiddlewar
 		eg: v1.GET("", r.humanHandler.GetAllHuman, authMw.IsAuthenticated)
 	*/
 
-	// private := server.Group("/api/v1/private/humans")
-	// private.GET("", r.humanHandler.GetAllHuman, authMw.IsAuthenticated)
+	private := server.Group("/api/v1/private/humans")
+	private.GET("", r.humanHandler.GetAllHuman, authMw.IsAuthenticated)
 }
