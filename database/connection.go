@@ -1,19 +1,19 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 )
 
 type DatabaseProvider interface{}
 
 type DatabaseProviderConnection struct {
-	Db *sql.DB
+	Db *sqlx.DB
 }
 
 func ConnectMYSQL() DatabaseProvider {
@@ -26,7 +26,7 @@ func ConnectMYSQL() DatabaseProvider {
 		"db_name":  viper.GetString("database.db_name"),
 	}
 
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	db, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		config["user"],
 		config["password"],
 		config["host"],
@@ -40,6 +40,7 @@ func ConnectMYSQL() DatabaseProvider {
 		log.Println("Database Connected!")
 	}
 
+	// db.MapperFunc(strings.ToLower)
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)

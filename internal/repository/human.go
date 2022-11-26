@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"log"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/joisandresky/go-echo-mysql-boilerplate/database"
 	"github.com/joisandresky/go-echo-mysql-boilerplate/internal/entity"
 )
@@ -18,7 +18,7 @@ type HumanRepository interface {
 }
 
 type humanRepository struct {
-	c *sql.DB
+	c *sqlx.DB
 }
 
 func NewHumanRepository(conn database.DatabaseProviderConnection) HumanRepository {
@@ -27,21 +27,20 @@ func NewHumanRepository(conn database.DatabaseProviderConnection) HumanRepositor
 
 func (r *humanRepository) GetAll(ctx context.Context) ([]entity.Human, error) {
 	var humans []entity.Human
-	rows, err := r.c.QueryContext(ctx, "SELECT * FROM humans")
+	rows, err := r.c.QueryxContext(ctx, "SELECT * FROM humans")
 	if err != nil {
 		return nil, err
 	}
 
 	var human entity.Human
 	for rows.Next() {
-		err := rows.Scan(&human.ID, &human.Name, &human.Race, &human.CreatedAt, &human.UpdatedAt)
+		err := rows.StructScan(&human)
 		if err != nil {
 			log.Println("FAILED_TO_DECODE_STRUCT_FROM_ROW", err)
 		}
 
 		humans = append(humans, human)
 	}
-	log.Println("humans", humans)
 	defer rows.Close()
 
 	return humans, nil
@@ -49,8 +48,8 @@ func (r *humanRepository) GetAll(ctx context.Context) ([]entity.Human, error) {
 
 func (r *humanRepository) Show(ctx context.Context, id int) (entity.Human, error) {
 	var human entity.Human
-	row := r.c.QueryRowContext(ctx, "SELECT * FROM humans WHERE id = ?", id)
-	if err := row.Scan(&human.ID, &human.Name, &human.Race, &human.CreatedAt, &human.UpdatedAt); err != nil {
+	row := r.c.QueryRowxContext(ctx, "SELECT * FROM humans WHERE id = ?", id)
+	if err := row.StructScan(&human); err != nil {
 		return human, err
 	}
 

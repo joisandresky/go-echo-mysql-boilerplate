@@ -5,9 +5,9 @@ import (
 )
 
 type Human struct {
-	ID        int       `json:"id"`
-	Name      string    `json:"name" validate:"required"`
-	Race      string    `json:"race" validate:"required"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        int       `json:"id" db:"id"`
+	Name      string    `json:"name" validate:"required" db:"name"`
+	Race      string    `json:"race" validate:"required" db:"race"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
